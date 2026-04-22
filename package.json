@@ -1,0 +1,66 @@
+{
+  "name": "@empat/peopleforce-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for PeopleForce HR — connect Claude, Cursor, and other LLM clients to the PeopleForce API. 27 read-only tools for employees, time-off, recruitment, and reference data.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "peopleforce",
+    "hr",
+    "hris",
+    "ats",
+    "claude",
+    "claude-code",
+    "cursor",
+    "llm",
+    "ai",
+    "hr-automation",
+    "custom-software-development",
+    "ai-software-development",
+    "saas-development",
+    "empat"
+  ],
+  "homepage": "https://github.com/EmpatDevelopment/peopleforce-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/EmpatDevelopment/peopleforce-mcp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmpatDevelopment/peopleforce-mcp.git"
+  },
+  "license": "MIT",
+  "author": "Empat <hello@empat.tech> (https://www.empat.tech)",
+  "type": "module",
+  "bin": {
+    "peopleforce-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
