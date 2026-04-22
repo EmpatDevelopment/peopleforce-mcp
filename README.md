@@ -32,7 +32,7 @@ PeopleForce is one of the fastest-growing HRIS platforms in Eastern Europe, but 
 - "Who is on vacation next week in the Back-end department?"
 - "How many people are currently on probation?"
 - "List all open Senior iOS vacancies we haven't filled for 30+ days."
-- "What leave balance does `ir@empat.tech` have left this quarter?"
+- "What leave balance does `jane.doe@example.com` have left this quarter?"
 
 `peopleforce-mcp` fixes that. It is a minimal, read-only, fetch-based TypeScript server that lives on GitHub and plugs into any MCP client in a couple of commands.
 

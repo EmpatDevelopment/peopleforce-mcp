@@ -284,7 +284,7 @@ const tools: ToolDef[] = [
     tool: {
       name: "peopleforce_api_request",
       description:
-        "Escape hatch: perform a raw GET against any PeopleForce v3 API path (relative to /api/public/v3). Use when no dedicated tool covers the endpoint. Example path: 'employees/362409' or 'leave_requests?state=approved'.",
+        "Escape hatch: perform a raw GET against any PeopleForce v3 API path (relative to /api/public/v3). Use when no dedicated tool covers the endpoint. Example path: 'employees/12345' or 'leave_requests?state=approved'.",
       inputSchema: {
         type: "object",
         properties: {

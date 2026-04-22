@@ -63,5 +63,5 @@ Restart Claude Code to pick up new tools.
 - "How many people are currently on probation?"
 - "Who is on vacation next week?"
 - "List all open vacancies in the Back-end department."
-- "Show me the position history of employee 290941."
+- "Show me the position history of employee 12345."
 - "What leave types does the company have?"
