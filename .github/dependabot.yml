@@ -1,0 +1,43 @@
+# Dependabot configuration — see
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  # Keep npm dependencies (runtime + dev) fresh.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Europe/Kyiv
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    groups:
+      # Bundle patch + minor bumps into a single PR per group to cut review load.
+      runtime:
+        dependency-type: production
+        update-types:
+          - patch
+          - minor
+      dev:
+        dependency-type: development
+        update-types:
+          - patch
+          - minor
+
+  # Keep GitHub Actions (actions/checkout, setup-node, etc.) up to date.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: ci
+      include: scope
