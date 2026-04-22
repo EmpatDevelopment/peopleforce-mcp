@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Principle of least privilege — CI only needs to read code.
+# Any job that needs more (e.g. commenting on PRs) overrides locally.
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
