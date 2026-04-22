@@ -96,6 +96,18 @@ claude mcp add peopleforce --scope user \
 
 Detailed per-client guides with screenshots-friendly JSON snippets are in [`examples/`](./examples).
 
+### Configuration
+
+All configuration is passed via environment variables.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `PEOPLEFORCE_API_KEY` | **required** | Your PeopleForce Company API key. |
+| `PEOPLEFORCE_BASE_URL` | `https://app.peopleforce.io/api/public/v3` | Override if PeopleForce hosts you on a non-default endpoint. |
+| `PEOPLEFORCE_TIMEOUT_MS` | `15000` | Per-request timeout. Slow PeopleForce responses are aborted and retried. |
+| `PEOPLEFORCE_MAX_RETRIES` | `3` | Max automatic retries for `429` / `5xx` / network timeouts. Set to `0` to disable. |
+| `PEOPLEFORCE_RETRY_BASE_MS` | `500` | Base for exponential backoff with full jitter. Retry-After headers are honoured. |
+
 ### 4 — Keeping it up to date
 
 ```bash

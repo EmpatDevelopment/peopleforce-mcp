@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a reproducible bug in peopleforce-mcp
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please **do not include your PeopleForce API key** in any field below.
+  - type: input
+    id: version
+    attributes:
+      label: peopleforce-mcp version
+      description: Commit SHA or tag from `package.json`
+      placeholder: v0.1.0 or 956cef8
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      description: Output of `node --version`
+      placeholder: v22.11.0
+    validations:
+      required: true
+  - type: dropdown
+    id: client
+    attributes:
+      label: MCP client
+      options:
+        - Claude Code
+        - Claude Desktop
+        - Cursor
+        - Other (describe below)
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact tool name and arguments if known.
+      placeholder: |
+        1. Registered the server with `claude mcp add ...`
+        2. Asked Claude: "..."
+        3. The tool call `peopleforce_list_employees` returned ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Paste error messages or the tool output. Redact any employee data.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (optional)
+      description: Any relevant stderr from the MCP server. Redact any tokens or PII.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I have not included my API key or any employee PII in this report.
+          required: true
+        - label: I am running Node.js 18 or newer.
+          required: true

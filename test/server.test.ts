@@ -1,8 +1,8 @@
-import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import path from "node:path";
+import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +23,7 @@ async function rpc(messages: object[], env: Record<string, string>) {
   proc.stdout.on("data", (d) => (out += d.toString()));
   proc.stderr.on("data", (d) => (err += d.toString()));
   for (const m of messages) {
-    proc.stdin.write(JSON.stringify(m) + "\n");
+    proc.stdin.write(`${JSON.stringify(m)}\n`);
   }
   proc.stdin.end();
   const [code] = await once(proc, "close");
@@ -33,7 +33,12 @@ async function rpc(messages: object[], env: Record<string, string>) {
 test("server lists expected tools", { timeout: 10000 }, async () => {
   const res = await rpc(
     [
-      { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "1" } } },
+      {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "1" } },
+      },
       { jsonrpc: "2.0", method: "notifications/initialized" },
       { jsonrpc: "2.0", id: 2, method: "tools/list" },
     ],
@@ -79,7 +84,12 @@ test("server exits with helpful error when API key missing", { timeout: 10000 },
 test("tool call validates required arguments", { timeout: 10000 }, async () => {
   const res = await rpc(
     [
-      { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "1" } } },
+      {
+        jsonrpc: "2.0",
+        id: 1,
+        method: "initialize",
+        params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "1" } },
+      },
       { jsonrpc: "2.0", method: "notifications/initialized" },
       { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "peopleforce_get_employee", arguments: {} } },
     ],

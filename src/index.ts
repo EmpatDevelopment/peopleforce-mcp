@@ -1,21 +1,32 @@
 #!/usr/bin/env node
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-  type Tool,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema, type Tool } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { PeopleForceClient, PeopleForceError } from "./client.js";
 
 const apiKey = process.env.PEOPLEFORCE_API_KEY;
-const baseUrl = process.env.PEOPLEFORCE_BASE_URL;
 if (!apiKey) {
   console.error("ERROR: PEOPLEFORCE_API_KEY env var not set");
   process.exit(1);
 }
-const client = new PeopleForceClient(apiKey, baseUrl);
+
+function parsePositiveInt(name: string, raw: string | undefined): number | undefined {
+  if (raw === undefined || raw === "") return undefined;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+    console.error(`ERROR: ${name} must be a non-negative integer, got "${raw}"`);
+    process.exit(1);
+  }
+  return n;
+}
+
+const client = new PeopleForceClient(apiKey, {
+  baseUrl: process.env.PEOPLEFORCE_BASE_URL,
+  timeoutMs: parsePositiveInt("PEOPLEFORCE_TIMEOUT_MS", process.env.PEOPLEFORCE_TIMEOUT_MS),
+  maxRetries: parsePositiveInt("PEOPLEFORCE_MAX_RETRIES", process.env.PEOPLEFORCE_MAX_RETRIES),
+  retryBaseMs: parsePositiveInt("PEOPLEFORCE_RETRY_BASE_MS", process.env.PEOPLEFORCE_RETRY_BASE_MS),
+});
 
 const Page = {
   page: z.number().int().min(1).optional().describe("Page number (1-based). Default 1."),
@@ -46,7 +57,7 @@ function paginated(path: string, description: string, extra: z.ZodRawShape = {})
 }
 
 function toolNameFromPath(path: string): string {
-  return "peopleforce_list_" + path.replace(/^\/+/, "").replace(/\//g, "_");
+  return `peopleforce_list_${path.replace(/^\/+/, "").replace(/\//g, "_")}`;
 }
 
 function zodToJsonSchema(schema: z.ZodTypeAny): Tool["inputSchema"] {
@@ -155,7 +166,8 @@ const tools: ToolDef[] = [
   {
     tool: {
       name: "peopleforce_get_employee",
-      description: "Get a single employee by PeopleForce id. Returns full profile including position, department, manager, custom fields.",
+      description:
+        "Get a single employee by PeopleForce id. Returns full profile including position, department, manager, custom fields.",
       inputSchema: {
         type: "object",
         properties: {
@@ -310,10 +322,7 @@ const tools: ToolDef[] = [
   },
 ];
 
-const server = new Server(
-  { name: "peopleforce", version: "0.1.0" },
-  { capabilities: { tools: {} } },
-);
+const server = new Server({ name: "peopleforce", version: "0.1.0" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: tools.map((t) => t.tool),

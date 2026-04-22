@@ -4,6 +4,18 @@ All notable changes to `peopleforce-mcp` are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+### Added
+- **Automatic retries with exponential backoff and jitter** for `429` / `5xx` / network timeouts. Honours `Retry-After` (numeric and HTTP-date). Configurable via `PEOPLEFORCE_MAX_RETRIES` (default `3`) and `PEOPLEFORCE_RETRY_BASE_MS` (default `500`).
+- **Per-request timeout** via `AbortController`, configurable with `PEOPLEFORCE_TIMEOUT_MS` (default `15000`).
+- **Biome** for linting + formatting, wired into a dedicated `lint` CI job.
+- **GitHub community files:** issue templates (bug / feature / question / security redirect), PR template, CODEOWNERS.
+- Test coverage: 5 new tests for retry, backoff, `Retry-After`, non-retryable status codes, and timeout handling (14 tests total, up from 9).
+- `PeopleForceError.attempts` field exposing how many attempts were made before the error was thrown.
+
+### Changed
+- `PeopleForceClient` constructor now accepts an options object `{ baseUrl, timeoutMs, maxRetries, retryBaseMs, fetch, sleep }`. The previous `(apiKey, baseUrl: string)` signature is still accepted for back-compat.
+
+
 ## [0.1.0] — 2026-04-22
 
 ### Added

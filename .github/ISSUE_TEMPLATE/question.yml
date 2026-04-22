@@ -1,0 +1,25 @@
+name: Question / Help
+description: Ask a question about setup, usage, or PeopleForce API quirks
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a question, please check the [README](../../README.md) and the [`examples/`](../../examples) folder — most setup questions are covered there.
+  - type: textarea
+    id: context
+    attributes:
+      label: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried so far?
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: MCP client (Claude Code / Desktop / Cursor / …)

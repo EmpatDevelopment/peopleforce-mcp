@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability (confidential)
+    url: mailto:security@empat.tech
+    about: Report security issues privately — do not open a public GitHub issue.
+  - name: Empat — commercial HR automation & AI development
+    url: https://www.empat.tech
+    about: Need a custom PeopleForce integration, HR automation, or AI-powered product? Talk to Empat.

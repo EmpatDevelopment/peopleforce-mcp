@@ -1,0 +1,8 @@
+# Default owners — auto-requested on every PR.
+# Update this list as the maintainer team grows.
+*       @igorepeta
+
+# Security-sensitive areas require additional review.
+/src/client.ts          @igorepeta
+/SECURITY.md            @igorepeta
+/.github/workflows/     @igorepeta

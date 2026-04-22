@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a new tool, workflow, or improvement
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Start with the user story, not the proposed solution.
+      placeholder: As an HR manager I want to ... so that I can ...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Tool name, arguments, return shape, or a sketch of the workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: endpoint
+    attributes:
+      label: PeopleForce API endpoint(s) this would use
+      description: Link to the PeopleForce developer docs or paste a sample curl.
+      placeholder: |
+        GET /api/public/v3/<endpoint>
+        https://developer.peopleforce.io/reference/...
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: read_only
+    attributes:
+      label: Scope
+      options:
+        - label: This is a read-only addition (0.x scope).
+        - label: This requires a mutating API call (POST/PATCH/DELETE) and should wait for the v0.2 mutations track.
