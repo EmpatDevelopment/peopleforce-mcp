@@ -1,6 +1,7 @@
 {
-  "name": "@empat/peopleforce-mcp",
+  "name": "peopleforce-mcp",
   "version": "0.1.0",
+  "private": true,
   "description": "MCP server for PeopleForce HR — connect Claude, Cursor, and other LLM clients to the PeopleForce API. 27 read-only tools for employees, time-off, recruitment, and reference data.",
   "keywords": [
     "mcp",
@@ -45,9 +46,8 @@
     "build": "tsc && chmod +x dist/index.js",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "test": "tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+    "test": "npm run build && tsc -p tsconfig.test.json && node --test dist-test/test/*.test.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
@@ -59,8 +59,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

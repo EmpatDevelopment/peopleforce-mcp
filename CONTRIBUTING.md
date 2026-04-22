@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving `@empat/peopleforce-mcp`. This project is maintained by [Empat](https://www.empat.tech), a Ukrainian software development company, and is offered to the community under the MIT license.
+Thanks for your interest in improving `peopleforce-mcp`. This project is maintained by [Empat](https://www.empat.tech), a Ukrainian software development company, and is offered to the community under the MIT license.
 
 ## Quick Start
 
@@ -55,8 +55,10 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## Release Process (Maintainers)
 
+The project is distributed from GitHub — we do not publish to npm.
+
 1. Bump the version in `package.json`.
 2. Move `## [Unreleased]` notes into a dated section in `CHANGELOG.md`.
-3. `npm run test && npm run build`.
-4. `git tag v<x.y.z>` and push.
-5. `npm publish --access=public` (first release of the scope requires `npm login`).
+3. `npm run typecheck && npm run test && npm run build`.
+4. Commit, then `git tag v<x.y.z>` and `git push --tags`.
+5. Create a GitHub Release pointing at the new tag (paste the CHANGELOG section as release notes). This is what downstream users subscribe to.

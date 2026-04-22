@@ -1,9 +1,21 @@
-# @empat/peopleforce-mcp
+<p align="center">
+  <a href="https://www.empat.tech">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./assets/empat-logo-white.svg">
+      <img src="./assets/empat-logo-black.svg" alt="Empat" width="180">
+    </picture>
+  </a>
+</p>
 
-[![CI](https://github.com/EmpatDevelopment/peopleforce-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/EmpatDevelopment/peopleforce-mcp/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/@empat/peopleforce-mcp.svg)](https://www.npmjs.com/package/@empat/peopleforce-mcp)
-[![license](https://img.shields.io/npm/l/@empat/peopleforce-mcp.svg)](./LICENSE)
-[![Node](https://img.shields.io/node/v/@empat/peopleforce-mcp.svg)](https://nodejs.org)
+<h1 align="center">peopleforce-mcp</h1>
+
+<p align="center">
+  <a href="https://github.com/EmpatDevelopment/peopleforce-mcp/actions/workflows/ci.yml"><img src="https://github.com/EmpatDevelopment/peopleforce-mcp/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/EmpatDevelopment/peopleforce-mcp.svg" alt="MIT License"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg" alt="Node 18+"></a>
+  <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-compatible-blue.svg" alt="MCP compatible"></a>
+  <a href="https://www.empat.tech"><img src="https://img.shields.io/badge/built%20by-Empat-000000.svg" alt="Built by Empat"></a>
+</p>
 
 A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that connects **Claude**, **Cursor**, **Claude Desktop**, and any MCP-compatible LLM client to the **[PeopleForce](https://peopleforce.io)** HRIS / ATS.
 
@@ -22,13 +34,13 @@ PeopleForce is one of the fastest-growing HRIS platforms in Eastern Europe, but 
 - "List all open Senior iOS vacancies we haven't filled for 30+ days."
 - "What leave balance does `ir@empat.tech` have left this quarter?"
 
-`@empat/peopleforce-mcp` fixes that. It is a minimal, read-only, fetch-based TypeScript server that ships as an npm package and plugs into any MCP client in one command.
+`peopleforce-mcp` fixes that. It is a minimal, read-only, fetch-based TypeScript server that lives on GitHub and plugs into any MCP client in a couple of commands.
 
 ## Features
 
 - ✅ **27 tools** across employees, time-off, recruitment, tasks, assets, and reference data.
 - ✅ **Read-only by design** — the 0.x line never mutates your PeopleForce data.
-- ✅ **Zero-install via `npx`** — `npx -y @empat/peopleforce-mcp` just works.
+- ✅ **Clone & run** — no registry accounts required, deploy from GitHub in under a minute.
 - ✅ **Actionable errors** — 401 tells you to check your key, 404 tells you the endpoint isn't on v3.
 - ✅ **Built-in pagination** plus a `find_employee_by_email` workflow tool that paginates for you.
 - ✅ **Escape hatch** — `api_request` lets your agent hit any v3 GET endpoint not yet modelled.
@@ -43,14 +55,27 @@ PeopleForce → **Settings → Open API keys** → Generate.
 
 Pick the **Company API key** (full read access to employee data). Optionally restrict it to your IP range on the PeopleForce allow-list.
 
-### 2 — Install for your MCP client
+### 2 — Clone and build once
+
+Requires **Node.js 18 or newer** and **git**.
+
+```bash
+git clone https://github.com/EmpatDevelopment/peopleforce-mcp.git ~/peopleforce-mcp
+cd ~/peopleforce-mcp
+npm install
+npm run build
+```
+
+That produces `~/peopleforce-mcp/dist/index.js`, which is the only file your MCP client needs to launch.
+
+### 3 — Register with your MCP client
 
 **Claude Code**
 
 ```bash
 claude mcp add peopleforce --scope user \
   --env PEOPLEFORCE_API_KEY=your_key_here \
-  -- npx -y @empat/peopleforce-mcp
+  -- node "$HOME/peopleforce-mcp/dist/index.js"
 ```
 
 **Claude Desktop** — edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
@@ -59,8 +84,8 @@ claude mcp add peopleforce --scope user \
 {
   "mcpServers": {
     "peopleforce": {
-      "command": "npx",
-      "args": ["-y", "@empat/peopleforce-mcp"],
+      "command": "node",
+      "args": ["/absolute/path/to/peopleforce-mcp/dist/index.js"],
       "env": { "PEOPLEFORCE_API_KEY": "your_key_here" }
     }
   }
@@ -69,9 +94,17 @@ claude mcp add peopleforce --scope user \
 
 **Cursor** — paste the same JSON into `~/.cursor/mcp.json` under `mcpServers`.
 
-Detailed guides in [`examples/`](./examples).
+Detailed per-client guides with screenshots-friendly JSON snippets are in [`examples/`](./examples).
 
-### 3 — Ask something
+### 4 — Keeping it up to date
+
+```bash
+cd ~/peopleforce-mcp && git pull && npm install && npm run build
+```
+
+Restart your MCP client after each update.
+
+### 5 — Ask something
 
 > _"How many people are on probation right now, and which departments are they in?"_
 

@@ -2,35 +2,47 @@
 
 Claude Code is the official CLI from Anthropic. It stores MCP servers in `~/.claude.json`.
 
-## Option 1 — One-command install (recommended)
+## Prerequisites
+
+- **Node.js 18+** and **git**
+- A **PeopleForce Company API key** (PeopleForce → Settings → Open API keys → Generate)
+
+## 1. Clone and build
+
+```bash
+git clone https://github.com/EmpatDevelopment/peopleforce-mcp.git ~/peopleforce-mcp
+cd ~/peopleforce-mcp
+npm install
+npm run build
+```
+
+## 2. Register the server
 
 ```bash
 claude mcp add peopleforce --scope user \
   --env PEOPLEFORCE_API_KEY=your_key_here \
-  -- npx -y @empat/peopleforce-mcp
+  -- node "$HOME/peopleforce-mcp/dist/index.js"
 ```
 
 Verify:
 
 ```bash
 claude mcp list
-# → peopleforce: npx -y @empat/peopleforce-mcp - ✓ Connected
+# → peopleforce: node .../peopleforce-mcp/dist/index.js - ✓ Connected
 ```
 
-## Option 2 — Manual config
+## 3. Manual config (alternative to `claude mcp add`)
 
-Edit `~/.claude.json` and add:
+Edit `~/.claude.json` and add under `mcpServers`:
 
 ```json
 {
-  "mcpServers": {
-    "peopleforce": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@empat/peopleforce-mcp"],
-      "env": {
-        "PEOPLEFORCE_API_KEY": "your_key_here"
-      }
+  "peopleforce": {
+    "type": "stdio",
+    "command": "node",
+    "args": ["/absolute/path/to/peopleforce-mcp/dist/index.js"],
+    "env": {
+      "PEOPLEFORCE_API_KEY": "your_key_here"
     }
   }
 }
@@ -38,16 +50,13 @@ Edit `~/.claude.json` and add:
 
 Restart Claude Code.
 
-## Option 3 — Local checkout (for development)
+## Updating
 
 ```bash
-git clone https://github.com/EmpatDevelopment/peopleforce-mcp.git
-cd peopleforce-mcp && npm install && npm run build
-
-claude mcp add peopleforce --scope user \
-  --env PEOPLEFORCE_API_KEY=your_key_here \
-  -- node "$(pwd)/dist/index.js"
+cd ~/peopleforce-mcp && git pull && npm install && npm run build
 ```
+
+Restart Claude Code to pick up new tools.
 
 ## Sample prompts
 

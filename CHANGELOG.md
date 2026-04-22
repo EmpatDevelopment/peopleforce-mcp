@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@empat/peopleforce-mcp` are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the project uses [Semantic Versioning](https://semver.org/).
+All notable changes to `peopleforce-mcp` are documented here. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 

@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security issue in `@empat/peopleforce-mcp`, please **do not open a public GitHub issue**. Instead, email **security@empat.tech** with:
+If you discover a security issue in `peopleforce-mcp`, please **do not open a public GitHub issue**. Instead, email **security@empat.tech** with:
 
 1. A description of the issue and its impact.
 2. Steps to reproduce (a minimal PoC is ideal).
