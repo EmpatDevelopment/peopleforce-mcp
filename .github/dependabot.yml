@@ -3,6 +3,10 @@
 version: 2
 updates:
   # Keep npm dependencies (runtime + dev) fresh.
+  # Major version bumps are ignored — they require intentional migration effort
+  # (API changes, config rewrites). Security patches are NOT filtered by the
+  # `ignore` block: Dependabot security updates always open PRs regardless of
+  # semver, so CVE fixes still flow through automatically.
   - package-ecosystem: npm
     directory: /
     schedule:
@@ -17,6 +21,10 @@ updates:
       prefix: chore
       prefix-development: chore
       include: scope
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
     groups:
       # Bundle patch + minor bumps into a single PR per group to cut review load.
       runtime:
@@ -31,6 +39,7 @@ updates:
           - minor
 
   # Keep GitHub Actions (actions/checkout, setup-node, etc.) up to date.
+  # Actions majors are generally safe and small — we do NOT ignore majors here.
   - package-ecosystem: github-actions
     directory: /
     schedule:
