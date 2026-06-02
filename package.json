@@ -2,7 +2,7 @@
   "name": "peopleforce-mcp",
   "version": "0.2.0",
   "private": true,
-  "description": "MCP server for PeopleForce HR — connect Claude, Cursor, and other LLM clients to the PeopleForce API. 27 read-only tools for employees, time-off, recruitment, and reference data.",
+  "description": "MCP server for PeopleForce HR — connect Claude, Cursor, and other LLM clients to the PeopleForce API. 28 read-only tools for employees, time-off, recruitment, and reference data.",
   "keywords": [
     "mcp",
     "model-context-protocol",

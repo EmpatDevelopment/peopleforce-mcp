@@ -44,6 +44,8 @@ examples/         # ready-to-paste MCP client config snippets
 
 5. Update `CHANGELOG.md` under the `## [Unreleased]` section.
 
+6. New tools are exposed by default. Operators can narrow the exposed surface at runtime via the `PEOPLEFORCE_ENABLED_TOOLS` (allowlist) and `PEOPLEFORCE_DISABLED_TOOLS` (denylist) environment variables (see README → "Restricting the tool surface"). No code change is required when adding a tool — the new tool automatically participates in filtering.
+
 ## Commit Style
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):

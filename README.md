@@ -19,7 +19,7 @@
 
 A [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that connects **Claude**, **Cursor**, **Claude Desktop**, and any MCP-compatible LLM client to the **[PeopleForce](https://peopleforce.io)** HRIS / ATS.
 
-27 read-only tools cover the PeopleForce v3 REST API — employees, time-off, recruitment, and all reference data — so your AI assistant can answer HR questions grounded in live company data without bouncing you back to the web app.
+28 read-only tools cover the PeopleForce v3 REST API — employees, time-off, recruitment, and all reference data — so your AI assistant can answer HR questions grounded in live company data without bouncing you back to the web app.
 
 > Built and maintained by [**Empat**](https://www.empat.tech) — a Ukrainian custom software development company. We ship this connector as open source to make AI-assisted HR automation a commodity for every PeopleForce customer.
 
@@ -38,7 +38,7 @@ PeopleForce is one of the fastest-growing HRIS platforms in Eastern Europe, but 
 
 ## Features
 
-- ✅ **27 tools** across employees, time-off, recruitment, tasks, assets, and reference data.
+- ✅ **28 tools** across employees, time-off, recruitment, tasks, assets, and reference data.
 - ✅ **Read-only by design** — the 0.x line never mutates your PeopleForce data.
 - ✅ **Clone & run** — no registry accounts required, deploy from GitHub in under a minute.
 - ✅ **Actionable errors** — 401 tells you to check your key, 404 tells you the endpoint isn't on v3.
@@ -107,6 +107,35 @@ All configuration is passed via environment variables.
 | `PEOPLEFORCE_TIMEOUT_MS` | `15000` | Per-request timeout. Slow PeopleForce responses are aborted and retried. |
 | `PEOPLEFORCE_MAX_RETRIES` | `3` | Max automatic retries for `429` / `5xx` / network timeouts. Set to `0` to disable. |
 | `PEOPLEFORCE_RETRY_BASE_MS` | `500` | Base for exponential backoff with full jitter. Retry-After headers are honoured. |
+| `PEOPLEFORCE_ENABLED_TOOLS` | _(unset)_ | Optional comma-separated allowlist of tool names. When set, only the listed tools are exposed. Prefix `peopleforce_` is optional; matching is case-insensitive. |
+| `PEOPLEFORCE_DISABLED_TOOLS` | _(unset)_ | Optional comma-separated denylist of tool names. Subtracts from the (already-allowlisted) set. A tool listed in both ends up disabled. |
+
+### Restricting the tool surface
+
+By default, all 28 tools are exposed. Two optional environment variables let operators narrow the surface:
+
+- `PEOPLEFORCE_ENABLED_TOOLS` — comma-separated allowlist. When set, only the listed tools are exposed.
+- `PEOPLEFORCE_DISABLED_TOOLS` — comma-separated denylist. Removes tools from the (possibly allowlisted) set.
+
+Tokens are case-insensitive, whitespace-trimmed, and the `peopleforce_` prefix is optional (it is prepended automatically if missing).
+
+```bash
+# Expose only the employee directory tools.
+PEOPLEFORCE_ENABLED_TOOLS="list_employees,get_employee,find_employee_by_email" \
+  node dist/index.js
+
+# Expose everything except the raw API escape hatch (recommended for regulated deployments).
+PEOPLEFORCE_DISABLED_TOOLS="api_request" node dist/index.js
+
+# Both env vars at once: allowlist is applied first, denylist subtracts from it.
+PEOPLEFORCE_ENABLED_TOOLS="list_employees,get_employee,api_request" \
+PEOPLEFORCE_DISABLED_TOOLS="api_request" \
+  node dist/index.js
+```
+
+Unknown tool names log a stderr warning and are ignored (so an operator rolling back to an older version with a stale denylist entry does not break startup). A filter that exposes zero tools is a misconfiguration and causes the server to exit with code 1.
+
+The same filtered set is enforced on both `tools/list` (which the LLM sees in its manifest) and `tools/call` (which executes the tool). A denied tool cannot be listed and cannot be invoked — both paths consult the same in-memory set, by construction.
 
 ### 4 — Keeping it up to date
 

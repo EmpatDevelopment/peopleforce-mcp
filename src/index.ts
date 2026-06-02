@@ -21,6 +21,24 @@ function parsePositiveInt(name: string, raw: string | undefined): number | undef
   return n;
 }
 
+const TOOL_NAME_PREFIX = "peopleforce_";
+
+function canonicalToolName(raw: string): string {
+  const trimmed = raw.trim().toLowerCase();
+  if (!trimmed) return "";
+  return trimmed.startsWith(TOOL_NAME_PREFIX) ? trimmed : TOOL_NAME_PREFIX + trimmed;
+}
+
+function parseToolList(raw: string | undefined): Set<string> {
+  if (!raw) return new Set();
+  const out = new Set<string>();
+  for (const part of raw.split(",")) {
+    const c = canonicalToolName(part);
+    if (c) out.add(c);
+  }
+  return out;
+}
+
 const client = new PeopleForceClient(apiKey, {
   baseUrl: process.env.PEOPLEFORCE_BASE_URL,
   timeoutMs: parsePositiveInt("PEOPLEFORCE_TIMEOUT_MS", process.env.PEOPLEFORCE_TIMEOUT_MS),
@@ -322,15 +340,39 @@ const tools: ToolDef[] = [
   },
 ];
 
+const allowedToolNames = parseToolList(process.env.PEOPLEFORCE_ENABLED_TOOLS);
+const deniedToolNames = parseToolList(process.env.PEOPLEFORCE_DISABLED_TOOLS);
+
+const knownToolNames = new Set(tools.map((t) => t.tool.name));
+for (const name of [...allowedToolNames, ...deniedToolNames]) {
+  if (!knownToolNames.has(name)) {
+    console.error(
+      `WARN: unknown tool name "${name}" in PEOPLEFORCE_ENABLED_TOOLS / PEOPLEFORCE_DISABLED_TOOLS; ignoring.`,
+    );
+  }
+}
+
+const candidateTools = allowedToolNames.size > 0 ? tools.filter((t) => allowedToolNames.has(t.tool.name)) : tools;
+const exposedTools = candidateTools.filter((t) => !deniedToolNames.has(t.tool.name));
+
+if (exposedTools.length === 0) {
+  console.error(
+    "ERROR: PEOPLEFORCE_ENABLED_TOOLS / PEOPLEFORCE_DISABLED_TOOLS filter resulted in zero exposed tools; refusing to start.",
+  );
+  process.exit(1);
+}
+
+console.error(`peopleforce-mcp: exposing ${exposedTools.length}/${tools.length} tools`);
+
 const server = new Server({ name: "peopleforce", version: "0.1.0" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: tools.map((t) => t.tool),
+  tools: exposedTools.map((t) => t.tool),
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const name = req.params.name;
-  const def = tools.find((t) => t.tool.name === name);
+  const def = exposedTools.find((t) => t.tool.name === name);
   if (!def) {
     return {
       isError: true,

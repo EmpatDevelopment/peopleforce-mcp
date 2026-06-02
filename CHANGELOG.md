@@ -4,6 +4,12 @@ All notable changes to `peopleforce-mcp` are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+### Added
+- **Tool surface filtering** via two optional environment variables. `PEOPLEFORCE_ENABLED_TOOLS` (comma-separated allowlist) and `PEOPLEFORCE_DISABLED_TOOLS` (comma-separated denylist) let operators narrow the exposed tool set at server startup. Tokens are case-insensitive, whitespace-trimmed, and the `peopleforce_` prefix is optional. Composition is allow-then-deny, so a tool listed in both ends up disabled. Unknown tokens log a stderr warning and are ignored (rollback-safe); a filter that exposes zero tools causes `process.exit(1)`. Both `tools/list` and `tools/call` consult the same filtered in-memory set, mitigating CVE-2026-46519 (CWE-863 Incorrect Authorization) by construction — a denied tool cannot be listed nor invoked.
+
+### Tests
+- 5 new stdio smoke tests in `test/server.test.ts` covering denylist behavior at both handlers, allowlist narrowing, allow+deny composition with prefix normalization, non-fatal unknown tokens, and the zero-tools fail-fast exit (total: 8 server tests + 11 client tests = 19 tests).
+
 ## [0.2.0] — 2026-04-22
 
 ### Added
