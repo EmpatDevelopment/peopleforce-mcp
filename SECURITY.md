@@ -20,6 +20,8 @@ This server requires a PeopleForce **Company API key**, which grants read/write 
 - Restrict the key to specific IPs on the PeopleForce **allow-list** whenever possible.
 - Rotate the key immediately (PeopleForce → Settings → Open API keys → Revoke + Generate) if it is ever exposed.
 
+In regulated deployments, prefer narrowing the exposed tool surface to the minimum needed for your workflows. The `peopleforce_api_request` tool is a generic GET-to-any-path escape hatch under the same Company API key, so operators with strict least-privilege requirements should set `PEOPLEFORCE_DISABLED_TOOLS=api_request` (or use `PEOPLEFORCE_ENABLED_TOOLS` to allowlist only the specific tools their MCP client needs). See README → "Restricting the tool surface".
+
 ## Read-Only by Design
 
 Version 0.x of this server exposes **only GET endpoints**. It cannot create, update, or delete PeopleForce resources. If a future release adds mutating tools, they will be opt-in via an explicit feature flag.
