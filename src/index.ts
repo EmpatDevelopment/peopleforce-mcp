@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, type Tool } from "@modelcontextprotocol/sdk/types.js";
@@ -322,7 +325,20 @@ const tools: ToolDef[] = [
   },
 ];
 
-const server = new Server({ name: "peopleforce", version: "0.1.0" }, { capabilities: { tools: {} } });
+// package.json is the single source of truth for the advertised version. Reading it
+// beats a hardcoded literal that silently drifts on every release. Falls back instead
+// of throwing — a missing package.json must not stop the server from starting.
+function readVersion(): string {
+  try {
+    const pkgPath = join(dirname(fileURLToPath(import.meta.url)), "..", "package.json");
+    const { version } = JSON.parse(readFileSync(pkgPath, "utf8")) as { version?: string };
+    return version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
+const server = new Server({ name: "peopleforce", version: readVersion() }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: tools.map((t) => t.tool),
