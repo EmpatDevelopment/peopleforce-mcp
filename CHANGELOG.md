@@ -4,6 +4,12 @@ All notable changes to `peopleforce-mcp` are documented here. Format follows [Ke
 
 ## [Unreleased]
 
+### Fixed
+- The server advertised `version: "0.1.0"` in its `initialize` response while `package.json` said `0.2.0`. The version is now read from `package.json` at startup, so the two cannot drift again. Falls back to `0.0.0` rather than throwing if `package.json` is unreadable.
+
+### Documentation
+- New **Troubleshooting** section in the README: where each client writes its MCP log, the two failure modes behind almost every "Could not attach" / "Server disconnected" toast (stale absolute path in the client config, missing API key), and a one-liner stdio handshake to isolate the server from the client.
+
 ## [0.2.0] — 2026-04-22
 
 ### Added

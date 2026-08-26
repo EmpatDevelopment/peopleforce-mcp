@@ -162,6 +162,29 @@ Every tool is prefixed with `peopleforce_` and is **read-only**. All list tools 
 
 `api_request` — raw GET against any `/api/public/v3/<path>` with an optional `query` object. Use it when the endpoint you need isn't modelled above, and consider opening a PR to promote it to a first-class tool.
 
+## Troubleshooting
+
+**`Could not attach to MCP server peopleforce` / `Server disconnected`**
+
+Check the client log for the underlying stderr — the toast never carries it.
+
+| Log | Client |
+|-----|--------|
+| `~/Library/Logs/Claude/mcp-server-peopleforce.log` | Claude Desktop (macOS) |
+| `~/Library/Caches/claude-cli-nodejs/<project>/mcp-logs-peopleforce/*.jsonl` | Claude Code |
+
+Two failure modes account for almost all of these:
+
+- **`Error: Cannot find module '.../dist/index.js'`** — the absolute path in your client config no longer exists. Every client config stores its own copy of that path, so moving or re-cloning the repo breaks each one independently. Fix the `args` entry, then fully restart the client (config is read at startup).
+- **`ERROR: PEOPLEFORCE_API_KEY env var not set`** — the key is missing from the `env` block of that config. The server refuses to start without it rather than failing later on every call.
+
+If the path and key are both correct, run the server by hand — a clean handshake rules out the server itself:
+
+```bash
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"probe","version":"1"}}}' \
+  | PEOPLEFORCE_API_KEY=your_key_here node dist/index.js
+```
+
 ## Security
 
 This server requires a PeopleForce Company API key, which is effectively read access to your entire employee database. Read [`SECURITY.md`](./SECURITY.md) for full guidance — tl;dr:
