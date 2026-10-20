@@ -52,7 +52,7 @@
     "format": "biome format --write src test"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/sdk": "^1.31.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
